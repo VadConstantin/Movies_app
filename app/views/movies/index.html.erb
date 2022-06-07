@@ -4,19 +4,37 @@
   <div class="cards-container">
     <%@movies.each do |movie| %>
       <div class="movie-card">
+
         <div>
           <h4><%=movie.name %> <small><%=link_to "update", edit_movie_path(movie.id) %></small></h4>
+
           <small><%=movie.description%></small>
+          <div>
+            <% if movie.photo.attached? == false %>
+              <%= image_tag("https://images.theconversation.com/files/392339/original/file-20210329-17-1vm95zi.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=300&h=300.0&fit=crop") %>
+            <% else %>
+              <%= cl_image_tag movie.photo.key, height: 300, width: 300, crop: :fill %>
+            <% end %>
+          </div>
+
+          <div class="see-more">
           <p><%= link_to "see more", movie_path(movie.id), class: "btn btn-primary mt-3" %></p>
-          <% if movie.photo.attached? == false %>
-            <%= image_tag("https://images.theconversation.com/files/392339/original/file-20210329-17-1vm95zi.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=300&h=300.0&fit=crop") %>
-          <% else %>
-            <%= cl_image_tag movie.photo.key, height: 300, width: 300, crop: :fill %>
-          <% end %>
+          <p><%= link_to "add review", new_movie_review_path(movie.id), class: "btn btn-primary mt-3 ms-3" %></p>
+          </div>
+
+
+          <div>
+            <p><strong>Reviews from users :</strong></p>
+            <% movie.reviews.each do |review|%>
+              <p><em><%= review.content %></em><%= link_to "  X", review_path(review), method: :delete %></p>
+            <% end %>
+          </div>
         </div>
+
         <div>
           <%= link_to "X", movie_path(movie.id), class: "btn btn-primary", method: :delete  %>
         </div>
+
       </div>
     <%end %>
   </div>
